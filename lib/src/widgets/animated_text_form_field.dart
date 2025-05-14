@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_login/src/widgets/term_of_service_checkbox.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:phone_numbers_parser/phone_numbers_parser.dart' as pnp;
+//import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+//import 'package:phone_numbers_parser/phone_numbers_parser.dart' as pnp;
 import 'package:url_launcher/url_launcher.dart';
 
 enum TextFieldInertiaDirection {
@@ -98,7 +98,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   late Animation<double> iconRotationAnimation;
   late Animation<double> iconTranslateAnimation;
 
-  PhoneNumber? _phoneNumberInitialValue;
+  //PhoneNumber? _phoneNumberInitialValue;
   final TextEditingController _phoneNumberController = TextEditingController();
 
   @override
@@ -167,6 +167,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       );
     }
 
+    /*
     if (widget.userType == LoginUserType.intlPhone) {
       _phoneNumberInitialValue = PhoneNumber(
         isoCode: widget.initialIsoCode ?? 'US',
@@ -189,6 +190,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         }
       }
     }
+
+     */
   }
 
   void _updateSizeAnimation() {
@@ -271,7 +274,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Widget inputField;
-    if (widget.userType == LoginUserType.intlPhone) {
+    /*if (widget.userType == LoginUserType.intlPhone) {
       inputField = Padding(
         padding: const EdgeInsets.only(left: 8),
         child: InternationalPhoneNumberInput(
@@ -327,7 +330,8 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
           initialValue: _phoneNumberInitialValue,
         ),
       );
-    } else if (widget.userType == LoginUserType.checkbox) {
+    } else*/
+    if (widget.userType == LoginUserType.checkbox) {
       inputField = CheckboxFormField(
         initialValue: widget.controller?.text == 'true',
         validator: (value) =>
