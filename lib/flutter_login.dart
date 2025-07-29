@@ -243,6 +243,7 @@ class __HeaderState extends State<_Header> {
         widget.title!,
         key: kTitleKey,
         style: theme.textTheme.displaySmall,
+        textAlign: TextAlign.center,
       );
     } else {
       title = null;
