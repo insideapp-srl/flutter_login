@@ -76,13 +76,13 @@ class AuthCard extends StatefulWidget {
   final AnimationController loadingController;
 
   /// Validator for the user input field (email/username/etc).
-  final FormFieldValidator<String>? userValidator;
+  final AuthModeAwareValidator<String>? userValidator;
 
   /// Whether to validate the user field immediately on blur.
   final bool? validateUserImmediately;
 
   /// Validator for the password input field.
-  final FormFieldValidator<String>? passwordValidator;
+  final AuthModeAwareValidator<String>? passwordValidator;
 
   /// Called when the form is submitted (e.g., login/signup).
   final VoidCallback? onSubmit;
@@ -524,7 +524,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
       case _confirmRecover:
         return _ConfirmRecoverCard(
           key: _confirmRecoverCardKey,
-          passwordValidator: widget.passwordValidator!,
+          passwordValidator: (s) =>
+              widget.passwordValidator!.call(s, AuthMode.signup),
           onBack: () => _changeCard(_loginPageIndex),
           onSubmitCompleted: () => _changeCard(_loginPageIndex),
           initialIsoCode: widget.initialIsoCode,
