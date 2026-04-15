@@ -183,8 +183,8 @@ void main() {
             onSignup: (data) => null,
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            userValidator: (value) =>
-                value!.endsWith('.com') ? null : 'Invalid!',
+            userValidator: (value, authMode) =>
+              value!.endsWith('.com') ? null : 'Invalid!',
           ),
         );
     await tester.pumpWidget(loginBuilder());
@@ -216,8 +216,8 @@ void main() {
             onSignup: (data) => null,
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) =>
-                value!.length == 5 ? null : 'Invalid!',
+            passwordValidator: (value, authMode) =>
+              value!.length == 5 ? null : 'Invalid!',
           ),
         );
     await tester.pumpWidget(loginBuilder());
@@ -532,8 +532,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.userValidator('invalid-name'),
-      mockCallback.passwordValidator(user.password),
+      mockCallback.userValidator('invalid-name', AuthMode.login),
+      mockCallback.passwordValidator(user.password, AuthMode.login),
     ]);
     verifyNever(mockCallback.onLogin(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
@@ -550,8 +550,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.userValidator(invalidUser.name),
-      mockCallback.passwordValidator(invalidUser.password),
+      mockCallback.userValidator(invalidUser.name, AuthMode.login),
+      mockCallback.passwordValidator(invalidUser.password, AuthMode.login),
       mockCallback.onLogin(any),
     ]);
     verifyNever(mockCallback.onSubmitAnimationCompleted());
@@ -568,8 +568,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.userValidator(user.name),
-      mockCallback.passwordValidator(user.password),
+      mockCallback.userValidator(user.name, AuthMode.login),
+      mockCallback.passwordValidator(user.password, AuthMode.login),
       mockCallback.onLogin(any),
       mockCallback.onSubmitAnimationCompleted(),
     ]);
@@ -612,8 +612,18 @@ void main() {
     clickSubmitButton();
     await tester.pumpAndSettle();
 
-    verifyNever(mockCallback.userValidator(invalidUser.name));
-    verifyNever(mockCallback.passwordValidator(invalidUser.password));
+    verifyNever(
+      mockCallback.userValidator(
+        invalidUser.name,
+        AuthMode.signup,
+      ),
+    );
+    verifyNever(
+      mockCallback.passwordValidator(
+        invalidUser.password,
+        AuthMode.signup,
+      ),
+    );
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
 
@@ -631,8 +641,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.userValidator('invalid-name'),
-      mockCallback.passwordValidator(user.password),
+      mockCallback.userValidator('invalid-name', AuthMode.signup),
+      mockCallback.passwordValidator(user.password, AuthMode.signup),
     ]);
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
@@ -654,8 +664,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.userValidator(invalidUser.name),
-      mockCallback.passwordValidator(invalidUser.password),
+      mockCallback.userValidator(invalidUser.name, AuthMode.signup),
+      mockCallback.passwordValidator(invalidUser.password, AuthMode.signup),
       mockCallback.onSignup(any),
     ]);
     verifyNever(mockCallback.onSubmitAnimationCompleted());
@@ -674,8 +684,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.userValidator(user.name),
-      mockCallback.passwordValidator(user.password),
+      mockCallback.userValidator(user.name, AuthMode.signup),
+      mockCallback.passwordValidator(user.password, AuthMode.signup),
       mockCallback.onSignup(any),
       mockCallback.onSubmitAnimationCompleted(),
     ]);
@@ -697,11 +707,13 @@ void main() {
             additionalSignupFields: <UserFormField>[
               UserFormField(
                 keyName: 'Name',
-                fieldValidator: mockCallback.userValidator,
+                fieldValidator: (s) =>
+                    mockCallback.userValidator(s, AuthMode.signup),
               ),
               UserFormField(
                 keyName: 'Surname',
-                fieldValidator: mockCallback.userValidator,
+                fieldValidator: (s) =>
+                    mockCallback.userValidator(s, AuthMode.signup),
               ),
             ],
           ),
@@ -728,8 +740,18 @@ void main() {
     clickSubmitButton();
     await tester.pumpAndSettle();
 
-    verifyNever(mockCallback.userValidator(invalidUser.name));
-    verifyNever(mockCallback.passwordValidator(invalidUser.password));
+    verifyNever(
+      mockCallback.userValidator(
+        invalidUser.name,
+        AuthMode.signup,
+      ),
+    );
+    verifyNever(
+      mockCallback.passwordValidator(
+        invalidUser.password,
+        AuthMode.signup,
+      ),
+    );
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
 
@@ -747,8 +769,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.userValidator('invalid-name'),
-      mockCallback.passwordValidator(user.password),
+      mockCallback.userValidator('invalid-name', AuthMode.signup),
+      mockCallback.passwordValidator(user.password, AuthMode.signup),
     ]);
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
@@ -770,8 +792,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.userValidator(invalidUser.name),
-      mockCallback.passwordValidator(invalidUser.password),
+      mockCallback.userValidator(invalidUser.name, AuthMode.signup),
+      mockCallback.passwordValidator(invalidUser.password, AuthMode.signup),
     ]);
     verifyNever(mockCallback.onSignup(any));
     verifyNever(mockCallback.onSubmitAnimationCompleted());
@@ -796,8 +818,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyInOrder([
-      mockCallback.userValidator('foo'),
-      mockCallback.userValidator('bar'),
+      mockCallback.userValidator('foo', AuthMode.signup),
+      mockCallback.userValidator('bar', AuthMode.signup),
       mockCallback.onSignup(any),
       mockCallback.onSubmitAnimationCompleted(),
     ]);
@@ -899,7 +921,7 @@ void main() {
           FlutterLogin(
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) =>
+            passwordValidator: (value, authMode) =>
                 value!.length == 5 ? null : 'Invalid!',
             hideForgotPasswordButton: true,
             messages: LoginMessages(
@@ -921,7 +943,7 @@ void main() {
             onSignup: (data) => null,
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) =>
+            passwordValidator: (value, authMode) =>
                 value!.length == 5 ? null : 'Invalid!',
             loginProviders: [
               LoginProvider(
@@ -949,8 +971,8 @@ void main() {
             onSignup: (data) => null,
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) =>
-                value!.length == 5 ? null : 'Invalid!',
+            passwordValidator: (value, authMode) =>
+              value!.length == 5 ? null : 'Invalid!',
             messages: LoginMessages(
               signupButton: 'REGISTER',
               forgotPasswordButton: 'Forgot huh?',
@@ -968,7 +990,7 @@ void main() {
             onSignup: (data) => null,
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) =>
+            passwordValidator: (value, authMode) =>
                 value!.length == 5 ? null : 'Invalid!',
             hideProvidersTitle: true,
             loginProviders: [
@@ -1056,7 +1078,7 @@ void main() {
             onSignup: (data) => null,
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) => null,
+            passwordValidator: (value, authMode) => null,
           ),
         );
     await tester.pumpWidget(loginBuilder());
@@ -1092,7 +1114,7 @@ void main() {
             },
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) => null,
+            passwordValidator: (value, authMode) => null,
             additionalSignupFields: const [
               UserFormField(keyName: 'Name'),
               UserFormField(keyName: 'Surname'),
@@ -1146,7 +1168,7 @@ void main() {
             onSignup: (data) => null,
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) => null,
+            passwordValidator: (value, authMode) => null,
             additionalSignupFields: const [
               UserFormField(keyName: 'Name'),
               UserFormField(keyName: 'Surname'),
@@ -1192,7 +1214,7 @@ void main() {
             onSignup: (data) => null,
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) => null,
+            passwordValidator: (value, authMode) => null,
             additionalSignupFields: const [
               UserFormField(keyName: 'Name'),
               UserFormField(keyName: 'Surname'),
@@ -1238,7 +1260,7 @@ void main() {
             onSignup: (data) => null,
             onLogin: (data) => null,
             onRecoverPassword: (data) => null,
-            passwordValidator: (value) => null,
+            passwordValidator: (value, authMode) => null,
             footer: 'Copyright flutter_login',
           ),
         );

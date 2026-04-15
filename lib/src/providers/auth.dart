@@ -61,6 +61,13 @@ typedef ConfirmSignupRequiredCallback = Future<bool> Function(LoginData);
 /// The result is an error message; callback succeeds if the message is null.
 typedef ConfirmRecoverCallback = Future<String?>? Function(String, LoginData);
 
+/// Validator that also provides auth mode to the function, so that client code
+/// can execute different validation for login/signup
+typedef AuthModeAwareValidator<T> = String? Function(
+    T? value,
+    AuthMode authMode,
+    );
+
 /// Provides and manages authentication state and callbacks.
 class Auth with ChangeNotifier {
   /// Creates an instance of [Auth] to manage the login/signup state and related callbacks.
@@ -118,6 +125,7 @@ class Auth with ChangeNotifier {
 
   /// The type of authentication being used (password or provider).
   AuthType get authType => _authType;
+
   set authType(AuthType authType) {
     _authType = authType;
     notifyListeners();
@@ -127,6 +135,7 @@ class Auth with ChangeNotifier {
 
   /// Current authentication mode (login or signup).
   AuthMode get mode => _mode;
+
   set mode(AuthMode value) {
     _mode = value;
     notifyListeners();
@@ -160,6 +169,7 @@ class Auth with ChangeNotifier {
 
   /// Email or username entered by the user.
   String get email => _email;
+
   set email(String email) {
     _email = email;
     notifyListeners();
@@ -169,6 +179,7 @@ class Auth with ChangeNotifier {
 
   /// Password entered by the user.
   String get password => _password;
+
   set password(String password) {
     _password = password;
     notifyListeners();
@@ -178,6 +189,7 @@ class Auth with ChangeNotifier {
 
   /// Confirmation password entered by the user during sign up.
   String get confirmPassword => _confirmPassword;
+
   set confirmPassword(String confirmPassword) {
     _confirmPassword = confirmPassword;
     notifyListeners();
