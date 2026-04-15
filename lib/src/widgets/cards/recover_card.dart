@@ -13,7 +13,7 @@ class _RecoverCard extends StatefulWidget {
     this.loginTheme,
   });
 
-  final FormFieldValidator<String>? userValidator;
+  final AuthModeAwareValidator<String>? userValidator;
   final VoidCallback onBack;
   final LoginUserType userType;
   final LoginTheme? loginTheme;
@@ -109,7 +109,7 @@ class _RecoverCardState extends State<_RecoverCard>
       autofillHints: [getAutofillHints(widget.userType)],
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (value) => _submit(),
-      validator: widget.userValidator,
+      validator: (s) => widget.userValidator?.call(s, AuthMode.login),
       onSaved: (value) => auth.email = value!,
       initialIsoCode: widget.initialIsoCode,
       autofocus: widget.autofocusName,

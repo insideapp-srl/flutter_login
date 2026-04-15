@@ -12,8 +12,8 @@ class LoginCallback {
   Future<String>? onLogin(LoginData? data) => null;
   Future<String>? onSignup(SignupData? data) => null;
   Future<String>? onRecoverPassword(String? data) => null;
-  String? userValidator(String? value) => null;
-  String? passwordValidator(String? value) => null;
+  String? userValidator(String? value, AuthMode authMode) => null;
+  String? passwordValidator(String? value, AuthMode authMode) => null;
   void onSubmitAnimationCompleted() {}
 }
 
@@ -27,11 +27,14 @@ List<LoginData> loginStubCallback(MockCallback mockCallback) {
   const user = LoginData(name: 'near@gmail.com', password: '12345');
   const invalidUser = LoginData(name: 'not.exists@gmail.com', password: '');
 
-  when(mockCallback.userValidator(user.name)).thenReturn(null);
-  when(mockCallback.userValidator('invalid-name')).thenReturn('Invalid!');
+  when(mockCallback.userValidator(user.name, AuthMode.login)).thenReturn(null);
+  when(mockCallback.userValidator('invalid-name', AuthMode.login))
+      .thenReturn('Invalid!');
 
-  when(mockCallback.passwordValidator(user.password)).thenReturn(null);
-  when(mockCallback.passwordValidator('invalid-name')).thenReturn('Invalid!');
+  when(mockCallback.passwordValidator(user.password, AuthMode.login))
+      .thenReturn(null);
+  when(mockCallback.passwordValidator('invalid-name', AuthMode.login))
+      .thenReturn('Invalid!');
 
   when(mockCallback.onLogin(user)).thenAnswer((_) => null);
   when(mockCallback.onLogin(invalidUser))
@@ -48,11 +51,14 @@ List<SignupData> signupStubCallback(MockCallback mockCallback) {
   const invalidUser =
       SignupData.fromSignupForm(name: 'not.exists@gmail.com', password: '');
 
-  when(mockCallback.userValidator(user.name)).thenReturn(null);
-  when(mockCallback.userValidator('invalid-name')).thenReturn('Invalid!');
+  when(mockCallback.userValidator(user.name, AuthMode.signup)).thenReturn(null);
+  when(mockCallback.userValidator('invalid-name', AuthMode.signup))
+      .thenReturn('Invalid!');
 
-  when(mockCallback.passwordValidator(user.password)).thenReturn(null);
-  when(mockCallback.passwordValidator('invalid-name')).thenReturn('Invalid!');
+  when(mockCallback.passwordValidator(user.password, AuthMode.signup))
+      .thenReturn(null);
+  when(mockCallback.passwordValidator('invalid-name', AuthMode.signup))
+      .thenReturn('Invalid!');
 
   when(mockCallback.onSignup(user)).thenAnswer((_) => null);
   when(mockCallback.onSignup(invalidUser))
