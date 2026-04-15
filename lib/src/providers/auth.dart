@@ -61,6 +61,13 @@ typedef ConfirmSignupRequiredCallback = Future<bool> Function(LoginData);
 /// The result is an error message; callback succeeds if the message is null.
 typedef ConfirmRecoverCallback = Future<String?>? Function(String, LoginData);
 
+/// Validator that also provides auth mode to the function, so that client code
+/// can execute different validation for login/signup
+typedef AuthModeAwareValidator<T> = String? Function(
+  T? value,
+  AuthMode authMode,
+);
+
 /// Provides and manages authentication state and callbacks.
 class Auth with ChangeNotifier {
   /// Creates an instance of [Auth] to manage the login/signup state and related callbacks.

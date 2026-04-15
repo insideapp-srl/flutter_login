@@ -20,4 +20,4 @@ const kMinLogoHeight = 50.0;
 /// The maximum height at which the logo will be displayed.
 ///
 /// Used to limit scaling of the logo in larger layouts.
-const kMaxLogoHeight = 125.0;
+const kMaxLogoHeight = 250.0;

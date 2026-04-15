@@ -246,6 +246,7 @@ class __HeaderState extends State<_Header> {
         widget.title!,
         key: kTitleKey,
         style: theme.textTheme.displaySmall,
+        textAlign: TextAlign.center,
       );
     } else {
       title = null;
@@ -412,14 +413,14 @@ class FlutterLogin extends StatefulWidget {
 
   /// Email validating logic, Returns an error string to display if the input is
   /// invalid, or null otherwise
-  final FormFieldValidator<String>? userValidator;
+  final AuthModeAwareValidator<String>? userValidator;
 
   /// Should email be validated after losing focus true or after form
   /// submissions false. Default: false
   final bool? validateUserImmediately;
 
   /// Same as [userValidator] but for password
-  final FormFieldValidator<String>? passwordValidator;
+  final AuthModeAwareValidator<String>? passwordValidator;
 
   /// Called after the submit animation's completed. Put your route transition
   /// logic here. Recommend to use with [logoTag] and [titleTag]
@@ -543,7 +544,7 @@ class FlutterLogin extends StatefulWidget {
   /// Default email validator used when none is supplied.
   ///
   /// Returns `'Invalid email!'` if the value is null, empty, or doesn't match a basic email regex.
-  static String? defaultEmailValidator(String? value) {
+  static String? defaultEmailValidator(String? value, AuthMode authMode) {
     if (value == null || value.isEmpty || !email.hasMatch(value)) {
       return 'Invalid email!';
     }
@@ -553,7 +554,7 @@ class FlutterLogin extends StatefulWidget {
   /// Default password validator used when none is supplied.
   ///
   /// Returns `'Password is too short!'` if the value is null, empty, or shorter than 3 characters.
-  static String? defaultPasswordValidator(String? value) {
+  static String? defaultPasswordValidator(String? value, AuthMode authMode) {
     if (value == null || value.isEmpty || value.length <= 2) {
       return 'Password is too short!';
     }
